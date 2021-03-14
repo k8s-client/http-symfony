@@ -1,0 +1,55 @@
+{
+  "name": "k8s/http-symfony",
+  "description": "Symfony based HttpClient factory for k8s/client",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Chad Sikorra",
+      "email": "Chad.Sikorra@gmail.com"
+    }
+  ],
+  "keywords": [
+    "k8s",
+    "kubernetes"
+  ],
+  "require": {
+    "php": ">=7.2",
+    "k8s/core": "^1.3",
+    "nyholm/psr7": "^1.0",
+    "psr/http-client": "^1.0",
+    "symfony/http-client": ">=4.3"
+  },
+  "require-dev": {
+    "ext-mbstring": "*",
+    "friendsofphp/php-cs-fixer": "^2.0",
+    "mockery/mockery": "~1.3.0",
+    "phpstan/phpstan": "^0.12",
+    "phpunit/phpunit": "^8.0"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "autoload": {
+    "psr-4": {
+      "K8s\\HttpSymfony\\": "src/K8s/HttpSymfony"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "unit\\K8s\\HttpSymfony\\": "tests/unit/K8s/HttpSymfony"
+    }
+  },
+  "scripts": {
+    "cs-fix": [
+      "@putenv PHP_CS_FIXER_IGNORE_ENV=1",
+      "php-cs-fixer fix src/ --rules=@PSR2"
+    ],
+    "analyse": [
+      "phpstan analyse"
+    ],
+    "test-unit": [
+      "phpunit --testsuite unit --coverage-clover coverage-unit.xml"
+    ]
+  }
+}
