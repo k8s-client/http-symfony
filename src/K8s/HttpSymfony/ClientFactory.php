@@ -49,7 +49,7 @@ class ClientFactory implements HttpClientFactoryInterface
             $options = $this->setCurlExtraSslDataOpt(
                 $options,
                 'CURLOPT_SSLCERT_BLOB',
-                $fullContext->getClientCertificateData()
+                (string)$fullContext->getClientCertificateData()
             );
         }
 
@@ -59,7 +59,7 @@ class ClientFactory implements HttpClientFactoryInterface
             $options = $this->setCurlExtraSslDataOpt(
                 $options,
                 'CURLOPT_SSLKEY_BLOB',
-                $fullContext->getClientKeyData()
+                (string)$fullContext->getClientKeyData()
             );
         }
 
@@ -69,7 +69,7 @@ class ClientFactory implements HttpClientFactoryInterface
             $options = $this->setCurlExtraSslDataOpt(
                 $options,
                 'CURLOPT_ISSUERCERT_BLOB',
-                $fullContext->getClientCertificateData()
+                (string)$fullContext->getClientCertificateData()
             );
         }
 
