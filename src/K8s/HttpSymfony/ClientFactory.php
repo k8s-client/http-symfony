@@ -16,6 +16,7 @@ namespace K8s\HttpSymfony;
 use K8s\Core\Contract\ContextConfigInterface;
 use K8s\Core\Contract\HttpClientFactoryInterface;
 use Psr\Http\Client\ClientInterface;
+use RuntimeException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\Psr18Client;
 
@@ -44,16 +45,53 @@ class ClientFactory implements HttpClientFactoryInterface
 
         if ($fullContext->getClientCertificate()) {
             $options['local_cert'] = $fullContext->getClientCertificate();
+        } elseif ($fullContext->getClientCertificateData()) {
+            $options = $this->setCurlExtraSslDataOpt(
+                $options,
+                'CURLOPT_SSLCERT_BLOB',
+                $fullContext->getClientCertificateData()
+            );
+        }
+
+        if ($fullContext->getClientKey()) {
             $options['local_pk'] = $fullContext->getClientKey();
+        } elseif ($fullContext->getClientKeyData()) {
+            $options = $this->setCurlExtraSslDataOpt(
+                $options,
+                'CURLOPT_SSLKEY_BLOB',
+                $fullContext->getClientKeyData()
+            );
         }
 
         if ($fullContext->getServerCertificateAuthority()) {
             $options['cafile'] = $fullContext->getServerCertificateAuthority();
+        } elseif ($fullContext->getServerCertificateAuthorityData()) {
+            $options = $this->setCurlExtraSslDataOpt(
+                $options,
+                'CURLOPT_ISSUERCERT_BLOB',
+                $fullContext->getClientCertificateData()
+            );
         }
 
         return new Psr18Client(HttpClient::createForBaseUri(
             $fullContext->getServer(),
             $options
         ));
+    }
+
+    private function setCurlExtraSslDataOpt(
+        array $options,
+        string $optName,
+        string $value
+    ): array {
+        if (!defined($optName)) {
+            throw new RuntimeException(sprintf(
+                'Unable to set CURL option "%s". Options to set certificate data via strings requires PHP 8.1+.',
+                $optName
+            ));
+        }
+        $options['extra']['curl'][constant($optName)] = base64_decode($value);
+
+        return $options;
     }
 }
