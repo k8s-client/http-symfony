@@ -86,7 +86,7 @@ class ClientFactory implements HttpClientFactoryInterface
     ): array {
         if (!defined($optName)) {
             throw new RuntimeException(sprintf(
-                'Unable to set CURL option "%s". Options to set certificate data via strings requires PHP 8.1+.',
+                'Unable to set CURL option "%s". Options to set certificate data via strings requires PHP 8.1+ and libcurl >= 7.71.0.',
                 $optName
             ));
         }
